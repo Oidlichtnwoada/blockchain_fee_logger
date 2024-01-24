@@ -1,5 +1,5 @@
 from decimal import Decimal
-from typing import Union, Literal, get_args
+from typing import Literal, get_args
 
 from pydantic import BaseModel, Field, field_validator
 
