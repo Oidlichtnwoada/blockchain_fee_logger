@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 from pendulum import DateTime, UTC
 
 from blockchain_fee_logger.calculation.fee_calculation_result import (
@@ -10,6 +8,7 @@ from blockchain_fee_logger.retrieval.blockchain.btc_fee_retrieval import (
     TargetConfirmationMinutes,
 )
 from blockchain_fee_logger.utils.enum_utils import Blockchain, Unit
+from blockchain_fee_logger.utils.math_utils import get_decimal
 
 
 def calculate_btc_fee(
@@ -21,7 +20,9 @@ def calculate_btc_fee(
     sat_per_vbyte = btc_fee_response.estimates[
         target_confirmation_minutes
     ].sat_per_vbyte
-    transaction_fee_btcs = sat_per_vbyte * transaction_virtual_bytes / Decimal(10) ** 8
+    transaction_fee_btcs = (
+        sat_per_vbyte * transaction_virtual_bytes / get_decimal(10) ** 8
+    )
     return FeeCalculationResult(
         blockchain=Blockchain.Bitcoin.value,
         unit=Unit.BTC.value,

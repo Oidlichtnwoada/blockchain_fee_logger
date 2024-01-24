@@ -3,12 +3,13 @@ from typing import Union, Literal, get_args
 
 from pydantic import BaseModel, Field, field_validator
 
+from blockchain_fee_logger.utils.math_utils import get_pydantic_decimal_field
 from blockchain_fee_logger.utils.request_utils import checked_get_request
 
 
 class FeeDetails(BaseModel):
-    usd: Union[Decimal, Literal["NaN"]]
-    satoshi: Decimal
+    usd: Union[Decimal, Literal["NaN"]] = get_pydantic_decimal_field()
+    satoshi: Decimal = get_pydantic_decimal_field()
 
 
 class TotalFees(BaseModel):
@@ -18,7 +19,7 @@ class TotalFees(BaseModel):
 
 
 class Estimate(BaseModel):
-    sat_per_vbyte: Decimal
+    sat_per_vbyte: Decimal = get_pydantic_decimal_field()
     total: TotalFees
 
 

@@ -1,5 +1,3 @@
-from decimal import Context, setcontext
-
 from apscheduler.executors.pool import ThreadPoolExecutor
 from apscheduler.schedulers.base import BaseScheduler
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -25,7 +23,6 @@ def get_scheduler(interval_seconds: int = 10, workers: int = 32) -> BlockingSche
 
 def start_scheduler(scheduler: BaseScheduler) -> None:
     LoggerFactory.get_logger().info("The application is starting ...")
-    setcontext(Context(prec=128))
     scheduler.start()
 
 
