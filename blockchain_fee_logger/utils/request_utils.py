@@ -1,7 +1,7 @@
-import functools
+from functools import wraps
+from typing import Callable
 
-import requests
-from requests import RequestException
+from requests import RequestException, Session, Response
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 
@@ -9,12 +9,12 @@ DEFAULT_REQUEST_TIMEOUT_SECONDS = 5
 
 
 class SessionFactory:
-    session: requests.Session | None = None
+    session: Session | None = None
 
     @classmethod
-    def get_session(cls) -> requests.Session:
+    def get_session(cls) -> Session:
         if cls.session is None:
-            session = requests.Session()
+            session = Session()
             session.mount(
                 "https://", HTTPAdapter(max_retries=Retry(total=2, backoff_factor=0.1))
             )
@@ -26,13 +26,15 @@ class SessionFactory:
 
 
 class BadStatusCodeError(RequestException):
-    def __init__(self, response: requests.Response) -> None:
+    def __init__(self, response: Response) -> None:
         super().__init__()
         self.response = response
 
 
-def check_request_status_code(func):
-    @functools.wraps(func)
+def check_response_status_code(
+    func: Callable[..., Response]
+) -> Callable[..., Response]:
+    @wraps(func)
     def wrapper(*args, **kwargs):
         response = func(*args, **kwargs)
         if response.ok:
@@ -43,6 +45,6 @@ def check_request_status_code(func):
     return wrapper
 
 
-checked_get_request = check_request_status_code(SessionFactory.get_session().get)
+checked_get_request = check_response_status_code(SessionFactory.get_session().get)
 
-checked_post_request = check_request_status_code(SessionFactory.get_session().post)
+checked_post_request = check_response_status_code(SessionFactory.get_session().post)
