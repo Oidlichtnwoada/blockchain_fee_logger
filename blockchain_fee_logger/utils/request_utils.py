@@ -1,4 +1,4 @@
-from functools import wraps
+from functools import wraps, partial
 from typing import Callable
 
 from requests import RequestException, Session, Response
@@ -18,7 +18,7 @@ class SessionFactory:
             session.mount(
                 "https://", HTTPAdapter(max_retries=Retry(total=2, backoff_factor=0.1))
             )
-            session.request = functools.partial(  # type: ignore[method-assign]
+            session.request = partial(  # type: ignore[method-assign]
                 session.request, timeout=DEFAULT_REQUEST_TIMEOUT_SECONDS
             )
             cls.session = session
