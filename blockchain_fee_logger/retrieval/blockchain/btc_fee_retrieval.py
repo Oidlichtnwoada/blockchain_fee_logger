@@ -8,7 +8,7 @@ from blockchain_fee_logger.utils.request_utils import checked_get_request
 
 
 class FeeDetails(BaseModel):
-    usd: Union[Decimal, Literal["NaN"]] = get_pydantic_decimal_field()
+    usd: Literal["NaN"]
     satoshi: Decimal = get_pydantic_decimal_field()
 
 
