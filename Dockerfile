@@ -1,4 +1,6 @@
-FROM python:3.11.7-slim-bookworm as builder
+FROM python:3.11.7-alpine3.19 as builder
+
+RUN apk add --no-cache libffi-dev gcc python3-dev musl-dev
 
 RUN pip install poetry==1.7.1
 
@@ -13,10 +15,11 @@ COPY pyproject.toml poetry.lock ./
 
 RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --without dev --no-root
 
-FROM python:3.11.7-slim-bookworm as runtime
+FROM python:3.11.7-alpine3.19 as runtime
 
 ENV VIRTUAL_ENV=/app/.venv \
-    PATH="/app/.venv/bin:$PATH"
+    PATH="/app/.venv/bin:$PATH" \
+    TZ="UTC"
 
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
