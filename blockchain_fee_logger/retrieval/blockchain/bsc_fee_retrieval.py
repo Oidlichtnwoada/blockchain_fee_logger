@@ -19,7 +19,7 @@ class BscFeeResponse(BaseModel):
 def get_bsc_fee_response() -> tuple[BscFeeResponse, DateTime]:
     response_datetime = DateTime.now(tz=UTC)
     response = checked_post_request(
-        "https://bsc.publicnode.com/",
+        "https://bsc.publicnode.com",
         json={
             "id": 1,
             "jsonrpc": "2.0",
