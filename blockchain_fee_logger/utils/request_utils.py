@@ -27,8 +27,8 @@ class SessionFactory:
 
 class BadStatusCodeError(RequestException):
     def __init__(self, response: requests.Response) -> None:
-        self.response = response
         super().__init__()
+        self.response = response
 
 
 def check_request_status_code(func):
