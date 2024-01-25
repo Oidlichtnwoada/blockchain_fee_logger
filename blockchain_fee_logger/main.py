@@ -22,14 +22,22 @@ def signal_handler(
     stop_scheduler(scheduler, event_loop)
 
 
-def main() -> None:
-    event_loop = get_event_loop()
-    scheduler = get_scheduler(event_loop)
-    for sigint in (signal.SIGINT, signal.SIGTERM):
+def register_signal_handler(
+    sigints: tuple[int, ...],
+    event_loop: AbstractEventLoop,
+    scheduler: AsyncIOScheduler,
+) -> None:
+    for sigint in sigints:
         handler = partial(signal_handler, event_loop=event_loop, scheduler=scheduler)
         signal.signal(sigint, handler)
         asyncio_handler = partial(handler, signum=sigint, frame=None)
         event_loop.add_signal_handler(sigint, asyncio_handler)
+
+
+def main() -> None:
+    event_loop = get_event_loop()
+    scheduler = get_scheduler(event_loop)
+    register_signal_handler((signal.SIGINT, signal.SIGTERM), event_loop, scheduler)
     start_scheduler(scheduler, event_loop)
 
 
