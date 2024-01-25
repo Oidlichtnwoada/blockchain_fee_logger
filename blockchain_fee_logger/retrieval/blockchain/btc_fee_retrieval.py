@@ -52,4 +52,5 @@ async def get_btc_fee_response(
         "https://bitcoiner.live/api/fees/estimates/latest",
         params={"confidence": confirmation_probability_percentage / 100},
     )
-    return BtcFeeResponse.model_validate_json(await response.text())
+    response_text = await response.text()
+    return BtcFeeResponse.model_validate_json(response_text)

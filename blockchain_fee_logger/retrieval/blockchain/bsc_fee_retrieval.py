@@ -27,4 +27,5 @@ async def get_bsc_fee_response() -> tuple[BscFeeResponse, DateTime]:
             "params": [],
         },
     )
-    return BscFeeResponse.model_validate_json(await response.text()), response_datetime
+    response_text = await response.text()
+    return BscFeeResponse.model_validate_json(response_text), response_datetime

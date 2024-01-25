@@ -17,7 +17,7 @@ class SessionFactory:
     session: RetryClient | None = None
 
     @classmethod
-    def get_session(cls) -> RetryClient:
+    async def get_session(cls) -> RetryClient:
         if cls.session is None:
             session = RetryClient(
                 client_session=ClientSession(
@@ -49,6 +49,11 @@ def check_response_status_code(
     return wrapper
 
 
-checked_get_request = check_response_status_code(SessionFactory.get_session().get)
+async def checked_get_request(*args, **kwargs) -> ClientResponse:
+    session = await SessionFactory.get_session()
+    return await check_response_status_code(session.get)(*args, **kwargs)
 
-checked_post_request = check_response_status_code(SessionFactory.get_session().post)
+
+async def checked_post_request(*args, **kwargs) -> ClientResponse:
+    session = await SessionFactory.get_session()
+    return await check_response_status_code(session.post)(*args, **kwargs)
