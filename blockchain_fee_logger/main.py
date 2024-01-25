@@ -1,6 +1,6 @@
-import signal
 from asyncio import get_event_loop, AbstractEventLoop
 from functools import partial
+from signal import signal, SIGINT, SIGTERM
 from types import FrameType
 from typing import Optional
 
@@ -29,7 +29,7 @@ def register_signal_handler(
 ) -> None:
     for sigint in sigints:
         handler = partial(signal_handler, event_loop=event_loop, scheduler=scheduler)
-        signal.signal(sigint, handler)
+        signal(sigint, handler)
         asyncio_handler = partial(handler, signum=sigint, frame=None)
         event_loop.add_signal_handler(sigint, asyncio_handler)
 
@@ -37,7 +37,7 @@ def register_signal_handler(
 def main() -> None:
     event_loop = get_event_loop()
     scheduler = get_scheduler(event_loop)
-    register_signal_handler((signal.SIGINT, signal.SIGTERM), event_loop, scheduler)
+    register_signal_handler((SIGINT, SIGTERM), event_loop, scheduler)
     start_scheduler(scheduler, event_loop)
 
 
