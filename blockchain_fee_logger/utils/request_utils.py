@@ -8,6 +8,7 @@ from aiohttp import (
     ClientTimeout,
 )
 from aiohttp_retry import RetryClient, ExponentialRetry
+from aiohttp_retry.client import _RequestContext
 
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 5
 DEFAULT_RETRIES = 3
@@ -41,7 +42,7 @@ class BadStatusCodeError(ClientError):
 
 
 def get_response_text(
-    func: Callable[..., Awaitable[ClientResponse]], check_status_code: bool = True
+    func: Callable[..., _RequestContext], check_status_code: bool = True
 ) -> Callable[..., Awaitable[str]]:
     @wraps(func)
     async def wrapper(*args, **kwargs) -> str:
