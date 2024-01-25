@@ -1,11 +1,11 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class Blockchain(Enum):
+class Blockchain(StrEnum):
     Bitcoin = "Bitcoin"
     BSC = "BSC"
 
 
-class Unit(Enum):
+class Unit(StrEnum):
     BTC = "BTC"
     BNB = "BNB"
