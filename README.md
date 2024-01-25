@@ -4,7 +4,7 @@ This is a coding task designed to be used for hiring Python engineers to Bitpand
 both the applicant and the hiring Manager understand if a candidate will be a good fit for working in the team. 
 
 ## How to run the code
-All the following commands should be run inside the root folder of this repository
+All the following commands should be run inside the root folder of this repository:
 * Installing Poetry: ```pip install poetry```
 * Initializing the project: ```poetry install```
 * Running the project: ```poetry run main```
