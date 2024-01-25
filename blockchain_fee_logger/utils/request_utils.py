@@ -35,25 +35,24 @@ class BadStatusCodeError(ClientError):
         self.response = response
 
 
-def check_response_status_code(
-    func: Callable[..., Awaitable[ClientResponse]]
-) -> Callable[..., Awaitable[ClientResponse]]:
+def get_response_text(
+    func: Callable[..., Awaitable[ClientResponse]], check_status_code: bool = True
+) -> Callable[..., Awaitable[str]]:
     @wraps(func)
     async def wrapper(*args, **kwargs):
-        response = await func(*args, **kwargs)
-        if response.ok:
-            return response
-        else:
-            raise BadStatusCodeError(response)
+        async with func(*args, **kwargs) as response:
+            if check_status_code and not response.ok:
+                raise BadStatusCodeError(response)
+            return await response.text()
 
     return wrapper
 
 
-async def checked_get_request(*args, **kwargs) -> ClientResponse:
+async def checked_get_request_body_text(*args, **kwargs) -> str:
     session = await SessionFactory.get_session()
-    return await check_response_status_code(session.get)(*args, **kwargs)
+    return await get_response_text(session.get)(*args, **kwargs)
 
 
-async def checked_post_request(*args, **kwargs) -> ClientResponse:
+async def checked_post_request_body_text(*args, **kwargs) -> str:
     session = await SessionFactory.get_session()
-    return await check_response_status_code(session.post)(*args, **kwargs)
+    return await get_response_text(session.post)(*args, **kwargs)

@@ -1,7 +1,9 @@
 from pendulum import DateTime, UTC
 from pydantic import BaseModel, field_validator
 
-from blockchain_fee_logger.utils.request_utils import checked_post_request
+from blockchain_fee_logger.utils.request_utils import (
+    checked_post_request_body_text,
+)
 
 
 class BscFeeResponse(BaseModel):
@@ -18,7 +20,7 @@ class BscFeeResponse(BaseModel):
 
 async def get_bsc_fee_response() -> tuple[BscFeeResponse, DateTime]:
     response_datetime = DateTime.now(tz=UTC)
-    response = await checked_post_request(
+    response_text = await checked_post_request_body_text(
         "https://bsc.publicnode.com",
         json={
             "id": 1,
@@ -27,5 +29,4 @@ async def get_bsc_fee_response() -> tuple[BscFeeResponse, DateTime]:
             "params": [],
         },
     )
-    response_text = await response.text()
     return BscFeeResponse.model_validate_json(response_text), response_datetime

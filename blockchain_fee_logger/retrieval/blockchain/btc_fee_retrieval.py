@@ -4,7 +4,9 @@ from typing import Literal, get_args
 from pydantic import BaseModel, Field, field_validator
 
 from blockchain_fee_logger.utils.math_utils import get_pydantic_decimal_field
-from blockchain_fee_logger.utils.request_utils import checked_get_request
+from blockchain_fee_logger.utils.request_utils import (
+    checked_get_request_body_text,
+)
 
 
 class FeeDetails(BaseModel):
@@ -48,9 +50,8 @@ ConfirmationProbabilityPercentage = Literal[50, 80, 90]
 async def get_btc_fee_response(
     confirmation_probability_percentage: ConfirmationProbabilityPercentage = 90,
 ) -> BtcFeeResponse:
-    response = await checked_get_request(
+    response_text = await checked_get_request_body_text(
         "https://bitcoiner.live/api/fees/estimates/latest",
         params={"confidence": confirmation_probability_percentage / 100},
     )
-    response_text = await response.text()
     return BtcFeeResponse.model_validate_json(response_text)
