@@ -1,0 +1,13 @@
+{
+  "blockchain_configs": {
+    "Bitcoin": {
+      "confirmation_probability_percentage": 90,
+      "transaction_virtual_bytes": 140,
+      "target_confirmation_minutes": "30"
+    },
+    "BSC": {
+      "transaction_gas_unit_limit": 55000,
+      "base_fee_per_gas_unit_in_wei": 0
+    }
+  }
+}
