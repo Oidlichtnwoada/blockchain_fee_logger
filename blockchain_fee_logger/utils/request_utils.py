@@ -44,7 +44,7 @@ def get_response_text(
     func: Callable[..., Awaitable[ClientResponse]], check_status_code: bool = True
 ) -> Callable[..., Awaitable[str]]:
     @wraps(func)
-    async def wrapper(*args, **kwargs):
+    async def wrapper(*args, **kwargs) -> str:
         async with func(*args, **kwargs) as response:
             if check_status_code and not response.ok:
                 raise BadStatusCodeError(response)
