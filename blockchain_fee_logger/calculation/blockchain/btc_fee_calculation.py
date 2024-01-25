@@ -13,8 +13,8 @@ from blockchain_fee_logger.utils.math_utils import get_decimal
 
 def calculate_btc_fee(
     btc_fee_response: BtcFeeResponse,
-    transaction_virtual_bytes: int = 140,
-    target_confirmation_minutes: TargetConfirmationMinutes = "30",
+    transaction_virtual_bytes: int,
+    target_confirmation_minutes: TargetConfirmationMinutes,
 ) -> FeeCalculationResult:
     unix_timestamp = btc_fee_response.timestamp
     sat_per_vbyte = btc_fee_response.estimates[

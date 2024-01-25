@@ -5,18 +5,21 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 from blockchain_fee_logger.execution.execution import log_current_fee_for_blockchain
 from blockchain_fee_logger.logger.logger import LoggerFactory
-from blockchain_fee_logger.utils.enum_utils import Blockchain
+from blockchain_fee_logger.utils.config_utils import LoggerConfig
 from blockchain_fee_logger.utils.request_utils import SessionFactory
 
 
 def get_scheduler(
-    event_loop: AbstractEventLoop, interval_seconds: int = 10
+    event_loop: AbstractEventLoop,
+    logger_config: LoggerConfig,
 ) -> AsyncIOScheduler:
     scheduler = AsyncIOScheduler({"apscheduler.event_loop": event_loop})
-    trigger = IntervalTrigger(seconds=interval_seconds)
-    for blockchain in Blockchain:
+    trigger = IntervalTrigger(seconds=logger_config.check_interval_seconds)
+    for blockchain_config in logger_config.blockchain_configs.values():
         scheduler.add_job(
-            func=log_current_fee_for_blockchain, args=(blockchain,), trigger=trigger
+            func=log_current_fee_for_blockchain,
+            args=(blockchain_config,),
+            trigger=trigger,
         )
     return scheduler
 

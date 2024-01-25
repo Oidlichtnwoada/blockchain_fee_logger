@@ -1,4 +1,5 @@
 {
+  "check_interval_seconds": 10,
   "blockchain_configs": {
     "Bitcoin": {
       "confirmation_probability_percentage": 90,

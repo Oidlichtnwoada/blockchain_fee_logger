@@ -11,8 +11,8 @@ from blockchain_fee_logger.utils.math_utils import get_decimal
 def calculate_bsc_fee(
     bsc_fee_response: BscFeeResponse,
     response_datetime: DateTime,
-    transaction_gas_unit_limit: int = 55_000,
-    base_fee_per_gas_unit_in_wei: int = 0,
+    transaction_gas_unit_limit: int,
+    base_fee_per_gas_unit_in_wei: int,
 ) -> FeeCalculationResult:
     priority_fee_per_gas_unit_in_wei = int(bsc_fee_response.result, 16)
     fee_per_gas_unit_in_wei = (

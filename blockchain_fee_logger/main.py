@@ -1,3 +1,4 @@
+from argparse import ArgumentParser
 from asyncio import get_event_loop, AbstractEventLoop
 from functools import partial
 from signal import signal, SIGINT, SIGTERM
@@ -10,6 +11,10 @@ from blockchain_fee_logger.scheduler.scheduler import (
     get_scheduler,
     stop_scheduler,
     start_scheduler,
+)
+from blockchain_fee_logger.utils.config_utils import (
+    get_default_logger_config_json_file_path,
+    get_logger_config_from_json_file,
 )
 
 
@@ -34,9 +39,19 @@ def register_signal_handler(
         event_loop.add_signal_handler(sigint, asyncio_handler)
 
 
+def get_logger_config_file_path() -> str:
+    parser = ArgumentParser()
+    parser.add_argument(
+        "--config", type=str, default=get_default_logger_config_json_file_path()
+    )
+    args = parser.parse_args()
+    return args.config
+
+
 def main() -> None:
+    logger_config = get_logger_config_from_json_file(get_logger_config_file_path())
     event_loop = get_event_loop()
-    scheduler = get_scheduler(event_loop)
+    scheduler = get_scheduler(event_loop, logger_config)
     register_signal_handler((SIGINT, SIGTERM), event_loop, scheduler)
     start_scheduler(scheduler, event_loop)
 

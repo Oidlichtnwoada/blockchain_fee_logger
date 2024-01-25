@@ -30,6 +30,7 @@ BlockchainConfigurations = dict[Blockchain, BlockchainConfigUnion]
 
 
 class LoggerConfig(BaseModel):
+    check_interval_seconds: int = Field(ge=1)
     blockchain_configs: BlockchainConfigurations
 
     @field_validator("blockchain_configs")

@@ -19,19 +19,34 @@ from blockchain_fee_logger.retrieval.blockchain.bsc_fee_retrieval import (
 from blockchain_fee_logger.retrieval.blockchain.btc_fee_retrieval import (
     get_btc_fee_response,
 )
-from blockchain_fee_logger.utils.enum_utils import Blockchain
+from blockchain_fee_logger.utils.config_utils import (
+    BlockchainConfigUnion,
+    BscConfig,
+    BitcoinConfig,
+)
 
 
-async def log_current_fee_for_blockchain(blockchain: Blockchain) -> None:
+async def log_current_fee_for_blockchain(
+    blockchain_config: BlockchainConfigUnion,
+) -> None:
     try:
-        match blockchain:
-            case Blockchain.Bitcoin:
-                btc_fee_response = await get_btc_fee_response()
-                calculation_result = calculate_btc_fee(btc_fee_response)
-            case Blockchain.BSC:
+        match blockchain_config:
+            case BitcoinConfig():
+                btc_fee_response = await get_btc_fee_response(
+                    confirmation_probability_percentage=blockchain_config.confirmation_probability_percentage
+                )
+                calculation_result = calculate_btc_fee(
+                    btc_fee_response,
+                    transaction_virtual_bytes=blockchain_config.transaction_virtual_bytes,
+                    target_confirmation_minutes=blockchain_config.target_confirmation_minutes,
+                )
+            case BscConfig():
                 bsc_fee_response, response_datetime = await get_bsc_fee_response()
                 calculation_result = calculate_bsc_fee(
-                    bsc_fee_response, response_datetime
+                    bsc_fee_response,
+                    response_datetime,
+                    transaction_gas_unit_limit=blockchain_config.transaction_gas_unit_limit,
+                    base_fee_per_gas_unit_in_wei=blockchain_config.base_fee_per_gas_unit_in_wei,
                 )
             case _:
                 raise ValueError("Unsupported blockchain")

@@ -48,7 +48,7 @@ ConfirmationProbabilityPercentage = Literal[50, 80, 90]
 
 
 async def get_btc_fee_response(
-    confirmation_probability_percentage: ConfirmationProbabilityPercentage = 90,
+    confirmation_probability_percentage: ConfirmationProbabilityPercentage,
 ) -> BtcFeeResponse:
     response_text = await checked_get_request_body_text(
         "https://bitcoiner.live/api/fees/estimates/latest",
