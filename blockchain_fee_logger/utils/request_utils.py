@@ -28,6 +28,11 @@ class SessionFactory:
             cls.session = session
         return cls.session
 
+    @classmethod
+    async def close_session(cls) -> None:
+        if cls.session is not None:
+            await cls.session.close()
+
 
 class BadStatusCodeError(ClientError):
     def __init__(self, response: ClientResponse) -> None:
