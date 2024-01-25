@@ -3,6 +3,15 @@
 This is a coding task designed to be used for hiring Python engineers to Bitpandas Blockchain team. The aim is to help 
 both the applicant and the hiring Manager understand if a candidate will be a good fit for working in the team. 
 
+## How to run the code
+All the following commands should be run inside the root folder of this repository
+* Initializing the project: ```poetry install```
+* Running the project: ```poetry run main```
+* Formatting the project: ```poetry run black .```
+* Unit testing the project: ```poetry run pytest .```
+* Type checking the project: ```poetry run mypy .```
+* Dockerizing the project: ```docker build .```
+
 ## Introduction
 One of the responsibilities of the Bitpanda Blockchain team is to keep track of fees of various blockchains.
 Depending on various levels of seniority, we will review the finished task under different aspects. 
