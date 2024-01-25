@@ -1,7 +1,12 @@
 from functools import wraps
 from typing import Callable, Awaitable
 
-from aiohttp import ClientSession, ClientResponse, ClientError, ClientTimeout
+from aiohttp import (
+    ClientSession,
+    ClientResponse,
+    ClientError,
+    ClientTimeout,
+)
 from aiohttp_retry import RetryClient, ExponentialRetry
 
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 5

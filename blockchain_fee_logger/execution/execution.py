@@ -1,3 +1,5 @@
+from asyncio import TimeoutError
+
 from aiohttp.client_exceptions import ClientError
 from pydantic import ValidationError
 
@@ -33,7 +35,7 @@ async def log_current_fee_for_blockchain(blockchain: Blockchain) -> None:
                 )
             case _:
                 raise ValueError("Unsupported blockchain")
-    except (ClientError, ValidationError) as e:
+    except (ClientError, TimeoutError, ValidationError) as e:
         log_exception(e)
         return
     log_calculation_fee_result(calculation_result)
