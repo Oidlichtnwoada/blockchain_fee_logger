@@ -1,42 +1,41 @@
-from functools import wraps, partial
-from typing import Callable
+from functools import wraps
+from typing import Callable, Awaitable
 
-from requests import RequestException, Session, Response
-from requests.adapters import HTTPAdapter
-from urllib3 import Retry
+from aiohttp import ClientSession, ClientResponse, ClientError, ClientTimeout
+from aiohttp_retry import RetryClient, ExponentialRetry
 
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 5
+DEFAULT_RETRIES = 3
 
 
 class SessionFactory:
-    session: Session | None = None
+    session: RetryClient | None = None
 
     @classmethod
-    def get_session(cls) -> Session:
+    def get_session(cls) -> RetryClient:
         if cls.session is None:
-            session = Session()
-            session.mount(
-                "https://", HTTPAdapter(max_retries=Retry(total=2, backoff_factor=0.1))
-            )
-            session.request = partial(  # type: ignore[method-assign]
-                session.request, timeout=DEFAULT_REQUEST_TIMEOUT_SECONDS
+            session = RetryClient(
+                client_session=ClientSession(
+                    timeout=ClientTimeout(total=DEFAULT_REQUEST_TIMEOUT_SECONDS)
+                ),
+                retry_options=ExponentialRetry(attempts=DEFAULT_RETRIES),
             )
             cls.session = session
         return cls.session
 
 
-class BadStatusCodeError(RequestException):
-    def __init__(self, response: Response) -> None:
+class BadStatusCodeError(ClientError):
+    def __init__(self, response: ClientResponse) -> None:
         super().__init__()
         self.response = response
 
 
 def check_response_status_code(
-    func: Callable[..., Response]
-) -> Callable[..., Response]:
+    func: Callable[..., Awaitable[ClientResponse]]
+) -> Callable[..., Awaitable[ClientResponse]]:
     @wraps(func)
-    def wrapper(*args, **kwargs):
-        response = func(*args, **kwargs)
+    async def wrapper(*args, **kwargs):
+        response = await func(*args, **kwargs)
         if response.ok:
             return response
         else:

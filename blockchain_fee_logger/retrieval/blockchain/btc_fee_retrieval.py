@@ -45,11 +45,11 @@ class BtcFeeResponse(BaseModel):
 ConfirmationProbabilityPercentage = Literal[50, 80, 90]
 
 
-def get_btc_fee_response(
+async def get_btc_fee_response(
     confirmation_probability_percentage: ConfirmationProbabilityPercentage = 90,
 ) -> BtcFeeResponse:
-    response = checked_get_request(
+    response = await checked_get_request(
         "https://bitcoiner.live/api/fees/estimates/latest",
         params={"confidence": confirmation_probability_percentage / 100},
     )
-    return BtcFeeResponse.model_validate_json(response.text)
+    return BtcFeeResponse.model_validate_json(await response.text())
