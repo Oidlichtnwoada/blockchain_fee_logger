@@ -4,25 +4,9 @@ from typing import Union
 
 from pydantic import BaseModel, field_validator, Field
 
-from blockchain_fee_logger.retrieval.blockchain.btc_fee_retrieval import (
-    ConfirmationProbabilityPercentage,
-    TargetConfirmationMinutes,
-)
+from blockchain_fee_logger.utils.blockchain.bsc_config import BscConfig
+from blockchain_fee_logger.utils.blockchain.btc_config import BitcoinConfig
 from blockchain_fee_logger.utils.enum_utils import Blockchain
-
-
-class BitcoinConfig(BaseModel):
-    blockchain: Blockchain = Field(default=Blockchain.Bitcoin)
-    confirmation_probability_percentage: ConfirmationProbabilityPercentage
-    transaction_virtual_bytes: int
-    target_confirmation_minutes: TargetConfirmationMinutes
-
-
-class BscConfig(BaseModel):
-    blockchain: Blockchain = Field(default=Blockchain.BSC)
-    transaction_gas_unit_limit: int
-    base_fee_per_gas_unit_in_wei: int
-
 
 BlockchainConfigUnion = Union[BitcoinConfig, BscConfig]
 
