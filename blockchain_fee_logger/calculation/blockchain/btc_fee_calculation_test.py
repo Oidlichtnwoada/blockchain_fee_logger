@@ -1,4 +1,4 @@
-import time
+from time import time
 
 from pendulum import DateTime, UTC
 
@@ -14,7 +14,7 @@ from blockchain_fee_logger.utils.math_utils import get_decimal
 
 
 def test_calculate_btc_fee() -> None:
-    current_timestamp = int(time.time())
+    current_timestamp = int(time())
     current_datetime = DateTime.fromtimestamp(current_timestamp, tz=UTC)
     sample_btc_fee_response = BtcFeeResponse.model_validate_json(
         """{

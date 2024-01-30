@@ -1,23 +1,23 @@
-import logging
-import sys
+from logging import Logger, INFO, getLogger, StreamHandler, NOTSET, WARNING, Formatter
+from sys import stdout, stderr
 
-DEFAULT_LOG_LEVEL = logging.INFO
+DEFAULT_LOG_LEVEL = INFO
 
 
 class LoggerFactory:
-    logger: logging.Logger | None = None
+    logger: Logger | None = None
 
     @classmethod
-    def get_logger(cls) -> logging.Logger:
+    def get_logger(cls) -> Logger:
         if cls.logger is None:
-            logger = logging.getLogger(cls.__name__)
+            logger = getLogger(cls.__name__)
             logger.setLevel(DEFAULT_LOG_LEVEL)
-            stdout_handler = logging.StreamHandler(sys.stdout)
-            stdout_handler.setLevel(logging.NOTSET)
-            stdout_handler.addFilter(lambda record: record.levelno <= logging.INFO)
-            stderr_handler = logging.StreamHandler(sys.stderr)
-            stderr_handler.setLevel(logging.WARNING)
-            log_format = logging.Formatter("%(levelname)s: %(message)s")
+            stdout_handler = StreamHandler(stdout)
+            stdout_handler.setLevel(NOTSET)
+            stdout_handler.addFilter(lambda record: record.levelno <= INFO)
+            stderr_handler = StreamHandler(stderr)
+            stderr_handler.setLevel(WARNING)
+            log_format = Formatter("%(levelname)s: %(message)s")
             stdout_handler.setFormatter(log_format)
             stderr_handler.setFormatter(log_format)
             logger.addHandler(stdout_handler)
