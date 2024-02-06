@@ -1,3 +1,4 @@
+import typing
 from decimal import Decimal, Context
 
 from pydantic import Field
@@ -7,7 +8,7 @@ DECIMAL_PART_PLACES = 128
 TOTAL_PLACES = INTEGRAL_PART_PLACES + DECIMAL_PART_PLACES
 
 
-def get_pydantic_decimal_field() -> Decimal:
+def get_pydantic_decimal_field() -> typing.Any:
     return Field(max_digits=TOTAL_PLACES, decimal_places=DECIMAL_PART_PLACES)
 
 

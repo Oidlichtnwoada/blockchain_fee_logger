@@ -1,3 +1,4 @@
+import typing
 from functools import wraps
 from typing import Callable, Awaitable
 
@@ -45,7 +46,7 @@ def get_response_text(
     func: Callable[..., _RequestContext], check_status_code: bool = True
 ) -> Callable[..., Awaitable[str]]:
     @wraps(func)
-    async def wrapper(*args, **kwargs) -> str:
+    async def wrapper(*args: typing.Any, **kwargs: typing.Any) -> str:
         async with func(*args, **kwargs) as response:
             if check_status_code and not response.ok:
                 raise BadStatusCodeError(response)
@@ -54,11 +55,13 @@ def get_response_text(
     return wrapper
 
 
-async def checked_get_request_body_text(*args, **kwargs) -> str:
+async def checked_get_request_body_text(*args: typing.Any, **kwargs: typing.Any) -> str:
     session = await SessionFactory.get_session()
     return await get_response_text(session.get)(*args, **kwargs)
 
 
-async def checked_post_request_body_text(*args, **kwargs) -> str:
+async def checked_post_request_body_text(
+    *args: typing.Any, **kwargs: typing.Any
+) -> str:
     session = await SessionFactory.get_session()
     return await get_response_text(session.post)(*args, **kwargs)

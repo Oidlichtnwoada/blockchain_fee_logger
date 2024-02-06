@@ -1,3 +1,4 @@
+import typing
 from argparse import ArgumentParser
 from asyncio import get_event_loop, AbstractEventLoop
 from functools import partial
@@ -45,7 +46,7 @@ def get_logger_config_file_path() -> str:
         "--config", type=str, default=get_default_logger_config_json_file_path()
     )
     args = parser.parse_args()
-    return args.config
+    return typing.cast(str, args.config)
 
 
 def main() -> None:

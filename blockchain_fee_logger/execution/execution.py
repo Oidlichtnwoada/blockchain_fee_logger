@@ -19,10 +19,10 @@ from blockchain_fee_logger.retrieval.blockchain.bsc_fee_retrieval import (
 from blockchain_fee_logger.retrieval.blockchain.btc_fee_retrieval import (
     get_btc_fee_response,
 )
+from blockchain_fee_logger.utils.blockchain.bsc_config import BscConfig
+from blockchain_fee_logger.utils.blockchain.btc_config import BitcoinConfig
 from blockchain_fee_logger.utils.config_utils import (
     BlockchainConfigUnion,
-    BscConfig,
-    BitcoinConfig,
 )
 
 
